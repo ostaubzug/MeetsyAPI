@@ -30,39 +30,16 @@ MongoClient client = new MongoClient(settings);
 
 IMongoCollection<Event> eventsCollection = client.GetDatabase("DB1").GetCollection<Event>("Events");
 
-
-
-
 app.MapGet("/getAllEvents",  async() =>
 {
-    
-    //evt. zuerst auf C# Objekte mappen und dann wieder nach json serialisieren - LINQ kann auch genutzt werden so
-
-    // Fetch all events asynchronously and map them to Event objects
     List<Event> events = await GetAllEvents(eventsCollection);
     return Results.Json(events); 
 }).WithName("GetAllEvents").WithOpenApi();
 
 static async Task<List<Event>> GetAllEvents(IMongoCollection<Event> eventsCollection)
 {
-    // Fetch all documents in the collection
     var eventsCursor = await eventsCollection.FindAsync(new MongoDB.Bson.BsonDocument());
-    return await eventsCursor.ToListAsync();  // Return the list of mapped Event objects
+    return await eventsCursor.ToListAsync();
 }
-
-/*app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();*/
 
 app.Run();

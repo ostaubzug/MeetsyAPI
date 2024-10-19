@@ -8,9 +8,9 @@ public class Event
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
-    [BsonElement("eventName")] public string EventName { get; set; } = null!;
+    [BsonElement("eventName")] public string? EventName { get; set; }
 
     [BsonElement("eventDescription")] public string? EventDescription { get; set; }
 

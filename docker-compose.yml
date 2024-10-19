@@ -1,0 +1,6 @@
+﻿services:
+  meetsyapi:
+    image: meetsyapi
+    build:
+      context: .
+      dockerfile: MeetsyAPI/Dockerfile

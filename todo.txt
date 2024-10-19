@@ -1,2 +1,6 @@
 - Neue Events auch hinzufügen können
+- Ports handling, die richtigen Ports freischalten etc.
+
+
+- Docker für production
 - 

@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Meetsy",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,10 +1,16 @@
+using MeetsyAPI;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using Newtonsoft.Json;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -16,29 +22,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+MongoClientSettings settings =
+    MongoClientSettings.FromConnectionString(
+        "mongodb://admin:fajsdfi-asdifa4-ajfaknv-ckkdd@meetsy-testsrv.prod.projects.ls.eee.intern:27017/");
+MongoClient client = new MongoClient(settings);
+
+IMongoCollection<Event> eventsCollection = client.GetDatabase("DB1").GetCollection<Event>("Events");
+
+app.MapGet("/getAllEvents",  async() =>
+{
+    List<Event> events = await GetAllEvents(eventsCollection);
+    return Results.Json(events); 
+}).WithName("GetAllEvents").WithOpenApi();
+
+static async Task<List<Event>> GetAllEvents(IMongoCollection<Event> eventsCollection)
+{
+    var eventsCursor = await eventsCollection.FindAsync(new MongoDB.Bson.BsonDocument());
+    return await eventsCursor.ToListAsync();
+}
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

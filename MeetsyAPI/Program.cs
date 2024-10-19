@@ -1,5 +1,6 @@
 using MeetsyAPI;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
@@ -32,21 +33,22 @@ IMongoCollection<Event> eventsCollection = client.GetDatabase("DB1").GetCollecti
 
 
 
-app.MapGet("/getAllEvents",  () =>
+app.MapGet("/getAllEvents",  async() =>
 {
     
     //evt. zuerst auf C# Objekte mappen und dann wieder nach json serialisieren - LINQ kann auch genutzt werden so
-    var eventsCursor = eventsCollection.Find(new BsonDocument());
-    var events = eventsCursor.ToBsonDocument();
-    
-    var dotNetObj = BsonTypeMapper.MapToDotNetValue(events);
-    var json = JsonConvert.SerializeObject(dotNetObj);
-    
-    return json;
 
+    // Fetch all events asynchronously and map them to Event objects
+    List<Event> events = await GetAllEvents(eventsCollection);
+    return Results.Json(events); 
 }).WithName("GetAllEvents").WithOpenApi();
 
-
+static async Task<List<Event>> GetAllEvents(IMongoCollection<Event> eventsCollection)
+{
+    // Fetch all documents in the collection
+    var eventsCursor = await eventsCollection.FindAsync(new MongoDB.Bson.BsonDocument());
+    return await eventsCursor.ToListAsync();  // Return the list of mapped Event objects
+}
 
 /*app.MapGet("/weatherforecast", () =>
     {

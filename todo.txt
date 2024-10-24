@@ -3,4 +3,5 @@
 
 
 - Docker für production
-- 
+- Docker compose damit der Vue.js container mit der WebAPI sprechen kann, aber WebAPi idealerweise nicht exposed.
+- wie liefere ich die vue.js application aus ?

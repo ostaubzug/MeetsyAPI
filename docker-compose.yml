@@ -1,6 +1,5 @@
 ﻿services:
   meetsyapi:
-    image: meetsyapi
-    build:
-      context: .
-      dockerfile: MeetsyAPI/Dockerfile
+    image: oli1115/meetsyapi:latest
+    ports:
+      - "5000:5000"

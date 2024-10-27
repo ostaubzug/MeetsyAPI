@@ -20,8 +20,6 @@ var app = builder.Build();
 
 
 app.UseCors("AllowLocalhost");
-app.UseAuthorization();
-app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {

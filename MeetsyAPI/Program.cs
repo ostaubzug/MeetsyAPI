@@ -13,6 +13,18 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .WithOrigins("https://meetsy-testsrv.prod.projects.ls.eee.intern")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,6 +32,8 @@ var app = builder.Build();
 
 
 app.UseCors("AllowLocalhost");
+app.UseCors("AllowAll");
+
 
 if (app.Environment.IsDevelopment())
 {

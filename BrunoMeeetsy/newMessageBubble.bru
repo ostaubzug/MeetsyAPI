@@ -1,0 +1,23 @@
+meta {
+  name: newMessageBubble
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://meetsy-testsrv.prod.projects.ls.eee.intern:8080/addMessageBubbleData
+  body: json
+  auth: none
+}
+
+params:query {
+  : 
+}
+
+body:json {
+  {
+      "location": "server",
+      "description": "postTest",
+      "time": "jettzzt"
+  }
+}

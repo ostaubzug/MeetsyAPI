@@ -5,34 +5,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost", policy =>
+    options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // Allows requests from local development
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "https://meetsy-testsrv.prod.projects.ls.eee.intern"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy
-            .WithOrigins("https://meetsy-testsrv.prod.projects.ls.eee.intern")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
-
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
-
-app.UseCors("AllowLocalhost");
-app.UseCors("AllowAll");
+app.UseCors("CorsPolicy");
 
 
 if (app.Environment.IsDevelopment())

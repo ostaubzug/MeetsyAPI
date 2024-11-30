@@ -3,3 +3,7 @@
     image: oli1115/meetsyapi:latest
     ports:
       - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - /etc/nginx/ssl/certificate.crt:/app/ssl/certificate.crt
+      - /etc/nginx/ssl/private.key:/app/ssl/private.key

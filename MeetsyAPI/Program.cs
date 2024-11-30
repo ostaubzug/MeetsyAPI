@@ -7,10 +7,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:5173",
-                "https://meetsy-testsrv.prod.projects.ls.eee.intern"
-            )
+        policy
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });

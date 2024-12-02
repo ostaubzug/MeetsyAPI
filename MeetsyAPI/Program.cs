@@ -68,7 +68,7 @@ app.MapPost("/addProposedMessageBubbleData", async (ProposedMessageBubbleData pr
         {
             proposedMessageBubbleData.TimeStamp = DateTimeOffset.UtcNow;
             await proposedMessageCollection.InsertOneAsync(proposedMessageBubbleData);
-            return Results.StatusCode(100);
+            return Results.StatusCode(200);
         }
         catch (Exception ex)
         {

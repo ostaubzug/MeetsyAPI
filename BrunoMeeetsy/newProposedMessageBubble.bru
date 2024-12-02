@@ -1,0 +1,19 @@
+meta {
+  name: newProposedMessageBubble
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://meetsy-testsrv.prod.projects.ls.eee.intern:8080/addProposedMessageBubbleData
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "location": "server",
+      "description": "postTest",
+      "time": "jettzzt"
+  }
+}

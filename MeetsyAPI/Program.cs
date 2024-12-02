@@ -36,6 +36,7 @@ MongoClient client = new MongoClient(settings);
 
 IMongoCollection<Event> eventsCollection = client.GetDatabase("DB1").GetCollection<Event>("Events");
 IMongoCollection<MessageBubbleData> messageCollection = client.GetDatabase("DB1").GetCollection<MessageBubbleData>("MessageBubbleData");
+IMongoCollection<ProposedMessageBubbleData> proposedMessageCollection = client.GetDatabase("DB1").GetCollection<ProposedMessageBubbleData>("ProposedMessageBubbleData");
 
 
 app.MapGet("/getAllEvents",  async() =>
@@ -66,6 +67,24 @@ app.MapPost("/addMessageBubbleData", async (MessageBubbleData messageBubbleData)
             );
         }
     }).WithName("AddMessageBubbleData")
+    .WithOpenApi();
+
+app.MapPost("/addProposedMessageBubbleData", async (ProposedMessageBubbleData proposedMessageBubbleData) =>
+    {
+        try
+        {
+            await proposedMessageCollection.InsertOneAsync(proposedMessageBubbleData);
+            return Results.StatusCode(100);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(
+                title: "Failed to add message bubble data",
+                detail: ex.Message,
+                statusCode: 500
+            );
+        }
+    }).WithName("AddProposedMessageBubbleData")
     .WithOpenApi();
 
 static async Task<List<Event>> GetAllEvents(IMongoCollection<Event> eventsCollection)

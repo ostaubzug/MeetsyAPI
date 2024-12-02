@@ -34,16 +34,9 @@ MongoClientSettings settings =
         "mongodb://admin:fajsdfi-asdifa4-ajfaknv-ckkdd@mongo:27017/");
 MongoClient client = new MongoClient(settings);
 
-IMongoCollection<Event> eventsCollection = client.GetDatabase("DB1").GetCollection<Event>("Events");
 IMongoCollection<MessageBubbleData> messageCollection = client.GetDatabase("DB1").GetCollection<MessageBubbleData>("MessageBubbleData");
 IMongoCollection<ProposedMessageBubbleData> proposedMessageCollection = client.GetDatabase("DB1").GetCollection<ProposedMessageBubbleData>("ProposedMessageBubbleData");
 
-
-app.MapGet("/getAllEvents",  async() =>
-{
-    List<Event> events = await GetAllEvents(eventsCollection);
-    return Results.Json(events); 
-}).WithName("GetAllEvents").WithOpenApi();
 
 app.MapGet("/getAllMessageBubbleData",  async() =>
 {
@@ -87,11 +80,6 @@ app.MapPost("/addProposedMessageBubbleData", async (ProposedMessageBubbleData pr
     }).WithName("AddProposedMessageBubbleData")
     .WithOpenApi();
 
-static async Task<List<Event>> GetAllEvents(IMongoCollection<Event> eventsCollection)
-{
-    var eventsCursor = await eventsCollection.FindAsync(new MongoDB.Bson.BsonDocument());
-    return await eventsCursor.ToListAsync();
-}
 
 static async Task<List<MessageBubbleData>> GetAllMessageBubbleData(IMongoCollection<MessageBubbleData> messageCollection)
 {

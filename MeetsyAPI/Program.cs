@@ -82,6 +82,50 @@ app.MapPost("/addProposedMessageBubbleData", async (ProposedMessageBubbleData pr
     .WithOpenApi();
 
 
+app.MapPost("/moveProposedMessage/{id}", async (string id) =>
+    {
+        try
+        {
+            var filter = Builders<ProposedMessageBubbleData>.Filter.Eq("_id", MongoDB.Bson.ObjectId.Parse(id));
+            var proposedMessage = await proposedMessageCollection.Find(filter).FirstOrDefaultAsync();
+        
+            if (proposedMessage == null)
+            {
+                return Results.NotFound($"No proposed message found with ID: {id}");
+            }
+
+            var messageBubbleData = new MessageBubbleData
+            {
+                Location = proposedMessage.Location,
+                Description = proposedMessage.Description,
+                Time = proposedMessage.Time
+            };
+
+            await messageCollection.InsertOneAsync(messageBubbleData);
+            await proposedMessageCollection.DeleteOneAsync(filter);
+
+            return Results.Ok(new { 
+                message = "Successfully moved message",
+                oldId = id,
+                newId = messageBubbleData.Id
+            });
+        }
+        catch (FormatException)
+        {
+            return Results.BadRequest("Invalid ID format");
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(
+                title: "Failed to move message",
+                detail: ex.Message,
+                statusCode: 500
+            );
+        }
+    }).WithName("MoveProposedMessage")
+    .WithOpenApi();
+
+
 static async Task<List<MessageBubbleData>> GetAllMessageBubbleData(IMongoCollection<MessageBubbleData> messageCollection)
 {
     var messageCursor = await messageCollection.FindAsync(new MongoDB.Bson.BsonDocument());

@@ -29,9 +29,14 @@ if (app.Environment.IsDevelopment())
 }
 
 
-MongoClientSettings settings =
-    MongoClientSettings.FromConnectionString(
-        "mongodb://admin:fajsdfi-asdifa4-ajfaknv-ckkdd@mongo:27017/");
+string mongoPassword = Environment.GetEnvironmentVariable("MONGO_PASSWORD");
+if (string.IsNullOrEmpty(mongoPassword))
+{
+    throw new Exception("MONGO_PASSWORD environment variable is not set");
+}
+
+MongoClientSettings settings = MongoClientSettings.FromConnectionString(
+    $"mongodb://admin:{mongoPassword}@mongo:27017/");
 MongoClient client = new MongoClient(settings);
 
 IMongoCollection<MessageBubbleData> messageCollection = client.GetDatabase("DB1").GetCollection<MessageBubbleData>("MessageBubbleData");
